@@ -1,8 +1,8 @@
 package org.atexplorer.TrainerClientManager.service;
 
-import org.atexplorer.TrainerClientManager.dto.CreateAppUserRequest;
+import org.atexplorer.TrainerClientManager.dto.CreateAppUserDto;
 
 public interface AppUserService {
 
-    void addUser(CreateAppUserRequest request);
+    void addUser(CreateAppUserDto request);
 }
