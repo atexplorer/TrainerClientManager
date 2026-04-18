@@ -1,7 +1,8 @@
 package org.atexplorer.TrainerClientManager.service;
 
-import org.atexplorer.TrainerClientManager.dto.CreateAppUserRequest;
+import org.atexplorer.TrainerClientManager.dto.CreateAppUserDto;
 import org.atexplorer.TrainerClientManager.entity.*;
+import org.atexplorer.TrainerClientManager.factory.ProfileFactory;
 import org.atexplorer.TrainerClientManager.repository.AppUserRepository;
 import org.atexplorer.TrainerClientManager.repository.UserProfileRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,46 +22,30 @@ public class AppUserServiceImpl implements AppUserService{
     }
 
     @Override
-    public void addUser(CreateAppUserRequest request) {
-        UserType userType = UserType.valueOf(request.getUserType());
-        AppUser appUser = addAppUser(request, userType.toString());
-        UserProfile userProfile = switch (userType){
-            case CLIENT -> addClient();
-            case TRAINER -> addTrainer();
-        };
+    public void addUser(CreateAppUserDto request) {
+        AppUser appUser = addAppUser(request);
 
-        //this probably needs moved to a mapper
-        userProfile.setEmail(request.getEmail());
-        userProfile.setName(request.getFirstName() + " " + request.getLastName());
+        UserProfile userProfile = ProfileFactory.createUserProfile(request);
         userProfile.setAppUser(appUser);
-        userProfile.setActive(true);
+
         userProfileRepository.save(userProfile);
     }
 
-    private AppUser addAppUser(CreateAppUserRequest request, String authority){
+    private AppUser addAppUser(CreateAppUserDto request){
         if(appUserRepository.findByUsername(request.getUsername()).isPresent()){
             throw new RuntimeException("Username taken. Please select provide new username");
         }
 
         AppUser appUser = new AppUser();
-
         //this needs moved to a mapper
         appUser.setUsername(request.getUsername());
         appUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        appUser.setAuthority(authority);
+        appUser.setAuthority("ROLE_USER");
 
 
         appUserRepository.save(appUser);
 
         return appUser;
-    }
-
-    public TrainerProfile addTrainer(){
-        return new TrainerProfile();
-    }
-
-    public ClientProfile addClient(){
-        return new ClientProfile();
     }
 
 

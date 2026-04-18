@@ -1,12 +1,10 @@
 package org.atexplorer.TrainerClientManager.controller;
 
 import jakarta.validation.Valid;
-import org.atexplorer.TrainerClientManager.dto.CreateAppUserRequest;
+import org.atexplorer.TrainerClientManager.dto.CreateAppUserDto;
 import org.atexplorer.TrainerClientManager.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -20,7 +18,7 @@ public class AppUserController {
     }
 
     @PostMapping("api/accounts")
-    public void addTrainer(@RequestBody @Valid CreateAppUserRequest request){
+    public void addNewUser(@RequestBody @Valid CreateAppUserDto request){
         appUserService.addUser(request);
     }
 
