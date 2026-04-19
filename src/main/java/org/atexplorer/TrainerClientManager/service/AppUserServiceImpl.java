@@ -31,6 +31,21 @@ public class AppUserServiceImpl implements AppUserService{
         userProfileRepository.save(userProfile);
     }
 
+    @Override
+    public void updateAssignedTrainer(String clientUsername, String trainerUsername) {
+        TrainerProfile trainerProfile = userProfileRepository.findTrainerProfileByUsername(trainerUsername).orElseThrow();
+        ClientProfile clientProfile = userProfileRepository.findClientProfileByUsername(clientUsername).orElseThrow();
+
+        clientProfile.setTrainer(trainerProfile);
+
+
+    }
+
+    @Override
+    public void addToClientList(String clientUsername, String trainerUsername) {
+
+    }
+
     private AppUser addAppUser(CreateAppUserDto request){
         if(appUserRepository.findByUsername(request.getUsername()).isPresent()){
             throw new RuntimeException("Username taken. Please select provide new username");
