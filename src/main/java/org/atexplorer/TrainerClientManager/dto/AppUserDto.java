@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class AppUserDto {
-
+    @NotBlank
+    @Size(min = 6)
+    private String username;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -14,7 +16,13 @@ public class AppUserDto {
     private String email;
     private String userType;
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getFirstName() {
         return firstName;
