@@ -38,7 +38,7 @@ public class AppUserServiceImpl implements AppUserService{
 
         clientProfile.setTrainer(trainerProfile);
 
-
+        userProfileRepository.save(clientProfile);
     }
 
     @Override

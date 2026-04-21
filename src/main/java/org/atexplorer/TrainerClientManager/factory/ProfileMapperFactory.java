@@ -8,7 +8,7 @@ public class ProfileMapperFactory {
     public AppUserDto mapProfileToDto(UserProfile userProfile){
 
         return switch (userProfile){
-            case UserProfile u -> System.out.println();
+            case UserProfile u -> new AppUserDto();
         };
     }
 }
