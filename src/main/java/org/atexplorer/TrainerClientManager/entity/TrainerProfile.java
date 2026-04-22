@@ -22,6 +22,7 @@ public class TrainerProfile extends UserProfile{
         this.certifications = certifications;
     }
 
+    //Should this be an unmodifiable list? This object should in, theory, manage adding clients.
     public List<ClientProfile> getClients() {
         return clients;
     }

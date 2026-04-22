@@ -5,10 +5,5 @@ import org.atexplorer.TrainerClientManager.entity.UserProfile;
 
 public class ProfileMapperFactory {
 
-    public AppUserDto mapProfileToDto(UserProfile userProfile){
 
-        return switch (userProfile){
-            case UserProfile u -> new AppUserDto();
-        };
-    }
 }
