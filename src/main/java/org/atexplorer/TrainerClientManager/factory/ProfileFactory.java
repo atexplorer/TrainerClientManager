@@ -37,14 +37,14 @@ public class ProfileFactory {
     }
 
     public AppUserDto mapProfileToDto(UserProfile userProfile){
-        AppUserDto appUserDto = new AppUserDto();
-
-        baseProfileToDto(appUserDto, userProfile);
-
         return switch (userProfile){
-            case TrainerProfile t -> trainerToDto(appUserDto, t);
-            case ClientProfile c -> clientToDto(appUserDto, c);
-            default -> appUserDto;
+            case TrainerProfile t -> trainerToDto(t);
+            case ClientProfile c -> clientToDto(c);
+            default -> {
+                AppUserDto appUserDto = new AppUserDto();
+                baseProfileToDto(appUserDto, userProfile);
+                yield appUserDto;
+            }
         };
     }
 
@@ -58,23 +58,20 @@ public class ProfileFactory {
         appUserDto.setActive(userProfile.isActive());
     }
 
-    //I need to extend the AppUserDto to return a TrainerProfileDto
-    private AppUserDto trainerToDto(AppUserDto appUserDto, TrainerProfile trainerProfile){
-        TrainerProfileDto trainerProfileDto = (TrainerProfileDto) appUserDto;
-
+    private TrainerProfileDto trainerToDto(TrainerProfile trainerProfile){
+        TrainerProfileDto trainerProfileDto = new TrainerProfileDto();
+        baseProfileToDto(trainerProfileDto, trainerProfile);
         trainerProfileDto.setUserType("Trainer");
         trainerProfileDto.setClientProfiles(trainerProfile.getClients());
-
-
         return trainerProfileDto;
     }
 
-    private AppUserDto clientToDto(AppUserDto appUserDto, ClientProfile clientProfile){
-        ClientProfileDto clientProfileDto = (ClientProfileDto) appUserDto;
-
+    private ClientProfileDto clientToDto(ClientProfile clientProfile){
+        ClientProfileDto clientProfileDto = new ClientProfileDto();
+        baseProfileToDto(clientProfileDto, clientProfile);
+        clientProfileDto.setUserType("Client");
         clientProfileDto.setTrainer(clientProfile.getTrainer());
         clientProfileDto.setGoals(clientProfile.getGoals());
-
         return clientProfileDto;
     }
 }
