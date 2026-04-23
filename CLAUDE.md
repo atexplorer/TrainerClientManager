@@ -14,6 +14,18 @@
 | JSON | Jackson 3 (`tools.jackson` package — NOT `com.fasterxml.jackson`) |
 | Build | Maven 3.9 |
 
+## Git Workflow
+
+When committing and pushing changes, always run all three steps:
+
+```
+git add <files>
+git commit -m "..."
+git push
+```
+
+Do not open pull requests — the user handles PRs on GitHub.
+
 ## Running Maven
 
 Maven was installed via winget and should be on the PATH in any new Claude Code session started after installation. If `mvn` is not found, fall back to the full path:
