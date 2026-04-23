@@ -2,27 +2,38 @@ package org.atexplorer.TrainerClientManager.factory;
 
 import org.atexplorer.TrainerClientManager.dto.AppUserDto;
 import org.atexplorer.TrainerClientManager.dto.ClientProfileDto;
+import org.atexplorer.TrainerClientManager.dto.CreateAccountDto;
+import org.atexplorer.TrainerClientManager.dto.CreateClientAccountDto;
+import org.atexplorer.TrainerClientManager.dto.CreateTrainerAccountDto;
 import org.atexplorer.TrainerClientManager.dto.TrainerProfileDto;
 import org.atexplorer.TrainerClientManager.entity.ClientProfile;
 import org.atexplorer.TrainerClientManager.entity.TrainerProfile;
 import org.atexplorer.TrainerClientManager.entity.UserProfile;
-import org.atexplorer.TrainerClientManager.entity.UserType;
 
 public class ProfileFactory {
 
-    public static UserProfile createUserProfile(AppUserDto appUserDto){
-        UserProfile userProfile = switch (UserType.valueOf(appUserDto.getUserType())){
-            case CLIENT -> new ClientProfile();
-            case TRAINER -> new TrainerProfile();
-        };
-        userProfile.setEmail(appUserDto.getEmail());
-        userProfile.setName(appUserDto.getFirstName() + " " + appUserDto.getLastName());
-        userProfile.setFirstName(appUserDto.getFirstName());
-        userProfile.setMiddleName(appUserDto.getMiddleName());
-        userProfile.setLastName(appUserDto.getLastName());
-        userProfile.setSuffix(appUserDto.getSuffix());
-        userProfile.setActive(true);
-        return userProfile;
+    public static ClientProfile createClientProfile(CreateClientAccountDto request) {
+        ClientProfile profile = new ClientProfile();
+        applyCommonFields(profile, request);
+        profile.setGoals(request.getGoals());
+        return profile;
+    }
+
+    public static TrainerProfile createTrainerProfile(CreateTrainerAccountDto request) {
+        TrainerProfile profile = new TrainerProfile();
+        applyCommonFields(profile, request);
+        profile.setCertifications(request.getCertifications());
+        return profile;
+    }
+
+    private static void applyCommonFields(UserProfile profile, CreateAccountDto request) {
+        profile.setEmail(request.getEmail());
+        profile.setFirstName(request.getFirstName());
+        profile.setMiddleName(request.getMiddleName());
+        profile.setLastName(request.getLastName());
+        profile.setSuffix(request.getSuffix());
+        profile.setName(request.getFirstName() + " " + request.getLastName());
+        profile.setActive(true);
     }
 
     public AppUserDto mapProfileToDto(UserProfile userProfile){

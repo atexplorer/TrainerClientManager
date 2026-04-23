@@ -17,7 +17,7 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain permitAllSecurityChain(HttpSecurity http) throws Exception{
-        return http.securityMatcher("/api/accounts")
+        return http.securityMatcher("/api/accounts/client", "/api/accounts/trainer")
                 .authorizeHttpRequests(auth ->
                         auth.anyRequest().permitAll()
                 )
