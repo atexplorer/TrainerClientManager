@@ -1,6 +1,8 @@
 package org.atexplorer.TrainerClientManager.service;
 
-import org.atexplorer.TrainerClientManager.dto.CreateAppUserDto;
+import org.atexplorer.TrainerClientManager.dto.CreateAccountDto;
+import org.atexplorer.TrainerClientManager.dto.CreateClientAccountDto;
+import org.atexplorer.TrainerClientManager.dto.CreateTrainerAccountDto;
 import org.atexplorer.TrainerClientManager.entity.*;
 import org.atexplorer.TrainerClientManager.factory.ProfileFactory;
 import org.atexplorer.TrainerClientManager.repository.AppUserRepository;
@@ -9,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppUserServiceImpl implements AppUserService{
+public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final UserProfileRepository userProfileRepository;
@@ -22,22 +24,26 @@ public class AppUserServiceImpl implements AppUserService{
     }
 
     @Override
-    public void addUser(CreateAppUserDto request) {
+    public void createClientAccount(CreateClientAccountDto request) {
         AppUser appUser = addAppUser(request);
+        ClientProfile profile = ProfileFactory.createClientProfile(request);
+        profile.setAppUser(appUser);
+        userProfileRepository.save(profile);
+    }
 
-        UserProfile userProfile = ProfileFactory.createUserProfile(request);
-        userProfile.setAppUser(appUser);
-
-        userProfileRepository.save(userProfile);
+    @Override
+    public void createTrainerAccount(CreateTrainerAccountDto request) {
+        AppUser appUser = addAppUser(request);
+        TrainerProfile profile = ProfileFactory.createTrainerProfile(request);
+        profile.setAppUser(appUser);
+        userProfileRepository.save(profile);
     }
 
     @Override
     public void updateAssignedTrainer(String clientUsername, String trainerUsername) {
-        TrainerProfile trainerProfile = userProfileRepository.findTrainerProfileByUsername(trainerUsername).orElseThrow();
-        ClientProfile clientProfile = userProfileRepository.findClientProfileByUsername(clientUsername).orElseThrow();
-
+        TrainerProfile trainerProfile = userProfileRepository.findTrainerProfileByAppUserUsername(trainerUsername).orElseThrow();
+        ClientProfile clientProfile = userProfileRepository.findClientProfileByAppUserUsername(clientUsername).orElseThrow();
         clientProfile.setTrainer(trainerProfile);
-
         userProfileRepository.save(clientProfile);
     }
 
@@ -46,22 +52,18 @@ public class AppUserServiceImpl implements AppUserService{
 
     }
 
-    private AppUser addAppUser(CreateAppUserDto request){
-        if(appUserRepository.findByUsername(request.getUsername()).isPresent()){
-            throw new RuntimeException("Username taken. Please select provide new username");
+    private AppUser addAppUser(CreateAccountDto request) {
+        if (appUserRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username taken. Please provide a new username.");
         }
 
         AppUser appUser = new AppUser();
-        //this needs moved to a mapper
         appUser.setUsername(request.getUsername());
         appUser.setPassword(passwordEncoder.encode(request.getPassword()));
         appUser.setAuthority("ROLE_USER");
-
 
         appUserRepository.save(appUser);
 
         return appUser;
     }
-
-
 }

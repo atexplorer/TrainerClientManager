@@ -1,10 +1,13 @@
 package org.atexplorer.TrainerClientManager.service;
 
-import org.atexplorer.TrainerClientManager.dto.CreateAppUserDto;
+import org.atexplorer.TrainerClientManager.dto.CreateClientAccountDto;
+import org.atexplorer.TrainerClientManager.dto.CreateTrainerAccountDto;
 
 public interface AppUserService {
 
-    void addUser(CreateAppUserDto request);
+    void createClientAccount(CreateClientAccountDto request);
+
+    void createTrainerAccount(CreateTrainerAccountDto request);
 
     void updateAssignedTrainer(String clientUsername, String trainerUsername);
 
