@@ -15,7 +15,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    @Order(1)
+    public SecurityFilterChain permitAll(HttpSecurity http) throws Exception{
+        return http
+                .authorizeHttpRequests(auth ->
+                        auth.anyRequest().permitAll()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .build();
+    }
+
+    /*@Bean
+    @Order(2)
     public SecurityFilterChain permitAllSecurityChain(HttpSecurity http) throws Exception{
         return http.securityMatcher("/api/accounts/client", "/api/accounts/trainer")
                 .authorizeHttpRequests(auth ->
@@ -25,7 +35,7 @@ public class SecurityConfig {
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
-
+*/
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
